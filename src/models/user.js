@@ -3,12 +3,6 @@ const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
-if ( process.env.NODE_ENV === 'production') {
-  var secret = process.env.SECRET
-} else {
-  const config = require('../config.js')
-  var secret = config.secret
-}
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -94,7 +88,7 @@ userSchema.statics.findByCredentials = function(email, password) {
 
 userSchema.methods.generateToken = function() {
   const user = this
-  const token = jwt.sign({ _id: user._id.toString() }, secret, { expiresIn: '7 days'})
+  const token = jwt.sign({ _id: user._id.toString() }, 'secretoAntonio', { expiresIn: '7 days'})
   user.tokens = user.tokens.concat({ token })
   return new Promise(function( resolve, reject) {
     user.save().then(function(user){
